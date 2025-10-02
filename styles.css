@@ -109,6 +109,14 @@ h1 {
     background-color: #2980b9;
 }
 
+.project-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex: 1;
+    cursor: pointer;
+}
+
 .project-name {
     flex: 1;
     font-size: 1.1rem;
@@ -120,11 +128,44 @@ h1 {
     padding: 3px 8px;
     border-radius: 12px;
     font-size: 0.9rem;
+    margin-right: 10px;
 }
 
 .project-item.active .task-count {
     background-color: white;
     color: #3498db;
+}
+
+.project-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.edit-project-btn, .delete-project-btn {
+    padding: 4px 8px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: background-color 0.3s;
+}
+
+.edit-project-btn {
+    background-color: #f39c12;
+    color: white;
+}
+
+.edit-project-btn:hover {
+    background-color: #e67e22;
+}
+
+.delete-project-btn {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.delete-project-btn:hover {
+    background-color: #c0392b;
 }
 
 .input-section {

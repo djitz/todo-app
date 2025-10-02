@@ -148,6 +148,60 @@ class TodoApp {
         this.projectSelect.value = this.currentProject;
     }
     
+    editProject(projectId) {
+        const project = this.projects.find(p => p.id === projectId);
+        if (!project) return;
+        
+        const newName = prompt('Enter new project name:', project.name);
+        if (newName !== null && newName.trim() !== '') {
+            // Check if project name already exists
+            if (this.projects.some(p => p.id !== projectId && p.name === newName.trim())) {
+                alert('A project with this name already exists!');
+                return;
+            }
+            
+            project.name = newName.trim();
+            this.saveProjects();
+            this.updateProjectSelect();
+            this.updateProjectsList();
+        }
+    }
+    
+    deleteProject(projectId) {
+        // Confirm deletion
+        const project = this.projects.find(p => p.id === projectId);
+        if (!project) return;
+        
+        const confirmDelete = confirm(`Are you sure you want to delete the project "${project.name}"?\nAll tasks in this project will be moved to "All Tasks".`);
+        if (!confirmDelete) return;
+        
+        // Move tasks from this project to 'all' project
+        this.tasks = this.tasks.map(task => {
+            if (task.projectId === projectId) {
+                return {...task, projectId: 'all'};
+            }
+            return task;
+        });
+        
+        // Remove the project
+        this.projects = this.projects.filter(p => p.id !== projectId);
+        
+        // Save changes
+        this.saveProjects();
+        this.saveTasks();
+        
+        // Update UI - if currently viewing the deleted project, switch to 'all'
+        if (this.currentProject === projectId) {
+            this.currentProject = 'all';
+        }
+        
+        this.updateProjectSelect();
+        this.updateProjectsList();
+        this.updateTaskCounts();
+        this.renderTasks();
+        this.updateActiveProject();
+    }
+    
     saveTasks() {
         localStorage.setItem('todoTasks', JSON.stringify(this.tasks));
     }
@@ -205,12 +259,19 @@ class TodoApp {
             projectItem.className = `project-item ${this.currentProject === project.id ? 'active' : ''}`;
             projectItem.setAttribute('data-project', project.id);
             projectItem.innerHTML = `
-                <span class="project-name">${project.name}</span>
-                <span class="task-count" id="project-${project.id}-count">0</span>
+                <div class="project-info">
+                    <span class="project-name">${project.name}</span>
+                    <span class="task-count" id="project-${project.id}-count">0</span>
+                </div>
+                <div class="project-actions">
+                    <button class="edit-project-btn" onclick="todoApp.editProject('${project.id}')">Edit</button>
+                    <button class="delete-project-btn" onclick="todoApp.deleteProject('${project.id}')">Del</button>
+                </div>
             `;
             
-            // Add click event to switch project
-            projectItem.addEventListener('click', () => {
+            // Add click event to switch project (only on the project name/info, not buttons)
+            const projectInfo = projectItem.querySelector('.project-info');
+            projectInfo.addEventListener('click', () => {
                 this.switchProject(project.id);
             });
             
