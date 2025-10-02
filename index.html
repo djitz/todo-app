@@ -9,7 +9,27 @@
 <body>
     <div class="container">
         <h1>To-Do List</h1>
+        
+        <div class="projects-section">
+            <h2>Projects</h2>
+            <div class="projects-input">
+                <input type="text" id="projectInput" placeholder="Enter a new project name...">
+                <button id="addProjectBtn">Add Project</button>
+            </div>
+            <div class="projects-list-container">
+                <ul id="projectsList" class="projects-list">
+                    <li class="project-item active" data-project="all">
+                        <span class="project-name">All Tasks</span>
+                        <span class="task-count" id="allTasksCount">0</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
         <div class="input-section">
+            <select id="projectSelect" class="project-select">
+                <option value="all">All Projects</option>
+            </select>
             <input type="text" id="taskInput" placeholder="Enter a new task...">
             <button id="addBtn">Add Task</button>
         </div>
